@@ -43,6 +43,7 @@ namespace ClientApp
                 options.Scope.Add("openid");
 
                 options.CallbackPath = new PathString("/signin-auth0");
+                options.SaveTokens = true;
 
                 options.ClaimsIssuer = "Auth0";
 
@@ -68,6 +69,11 @@ namespace ClientApp
                         context.HandleResponse();
 
                         return Task.CompletedTask;
+                    },
+                    OnRedirectToIdentityProvider = context =>
+                    {
+                        context.ProtocolMessage.SetParameter("audience", Configuration["Auth0:ApiIdentifier"]);
+                        return Task.FromResult(0);
                     }
                 };
             });
