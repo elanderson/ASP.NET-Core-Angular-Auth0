@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -11,8 +10,14 @@ namespace ClientApp.Controllers
 {
     public class AuthTestController : Controller
     {
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            ViewBag.ApiResults = "Not Called";
+
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", await HttpContext.GetTokenAsync("access_token"));
+            ViewBag.ApiResults = await (await client.GetAsync("http://localhost:50467/api/authtest")).Content.ReadAsStringAsync();
+
             return View();
         }
 
