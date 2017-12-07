@@ -10,16 +10,16 @@ module.exports = (env) => {
     const sharedConfig = {
         stats: { modules: false },
         context: __dirname,
-        resolve: { extensions: [ '.js', '.ts' ] },
+        resolve: { extensions: ['.js', '.ts'] },
         output: {
             filename: '[name].js',
             publicPath: 'dist/' // Webpack dev middleware, if enabled, handles requests for this URL prefix
         },
         module: {
             rules: [
-                { test: /\.ts$/, use: isDevBuild ? ['awesome-typescript-loader?silent=true', 'angular2-template-loader', 'angular2-router-loader'] : '@ngtools/webpack' },
+                { test: /\.ts$/, include: /ClientApp/, use: isDevBuild ? ['awesome-typescript-loader?silent=true', 'angular2-template-loader'] : '@ngtools/webpack' },
                 { test: /\.html$/, use: 'html-loader?minimize=false' },
-                { test: /\.css$/, use: [ 'to-string-loader', isDevBuild ? 'css-loader' : 'css-loader?minimize' ] },
+                { test: /\.css$/, use: ['to-string-loader', isDevBuild ? 'css-loader' : 'css-loader?minimize'] },
                 { test: /\.(png|jpg|jpeg|gif|svg)$/, use: 'url-loader?limit=25000' }
             ]
         },
@@ -43,14 +43,14 @@ module.exports = (env) => {
                 moduleFilenameTemplate: path.relative(clientBundleOutputDir, '[resourcePath]') // Point sourcemap entries to the original file locations on disk
             })
         ] : [
-            // Plugins that apply in production builds only
-            new webpack.optimize.UglifyJsPlugin(),
-            new AotPlugin({
-                tsConfigPath: './tsconfig.json',
-                entryModule: path.join(__dirname, 'ClientApp/app/app.browser.module#AppModule'),
-                exclude: ['./**/*.server.ts']
-            })
-        ])
+                // Plugins that apply in production builds only
+                new webpack.optimize.UglifyJsPlugin(),
+                new AotPlugin({
+                    tsConfigPath: './tsconfig.json',
+                    entryModule: path.join(__dirname, 'ClientApp/app/app.module.browser#AppModule'),
+                    exclude: ['./**/*.server.ts']
+                })
+            ])
     });
 
     // Configuration for server-side (prerendering) bundle suitable for running in Node
@@ -68,7 +68,7 @@ module.exports = (env) => {
             // Plugins that apply in production builds only
             new AotPlugin({
                 tsConfigPath: './tsconfig.json',
-                entryModule: path.join(__dirname, 'ClientApp/app/app.server.module#AppModule'),
+                entryModule: path.join(__dirname, 'ClientApp/app/app.module.server#AppModule'),
                 exclude: ['./**/*.browser.ts']
             })
         ]),
