@@ -13,6 +13,7 @@ import { AppComponent } from './components/app/app.component';
         { provide: 'ORIGIN_URL', useFactory: getBaseUrl },
         { provide: 'API_URL', useFactory: apiUrlFactory },
         { provide: 'IDENTITY_URL', useFactory: identityUrlFactory },
+        { provide: 'CLIENT_ID', useFactory: clientIdFactory },
         AppModuleShared
     ]
 })
@@ -29,4 +30,8 @@ export function apiUrlFactory() {
 
 export function identityUrlFactory() {
     return (window as any).url_Config.identityUrl;
+}
+
+export function clientIdFactory() {
+    return (window as any).url_Config.clientId;
 }

@@ -17,6 +17,7 @@ export default createServerRenderer(params => {
         { provide: 'ORIGIN_URL', useValue: params.origin + params.baseUrl },
         { provide: 'API_URL', useValue: params.data.apiUrl },
         { provide: 'IDENTITY_URL', useValue: params.data.identityUrl },
+        { provide: 'CLIENT_ID', useValue: params.data.clientId },
         { provide: 'URL_CONFIG', useValue: params.data}
     ];
 
